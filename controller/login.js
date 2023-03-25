@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var collection = require('../model/mongodb');
+var registration_info = require('../model/usersdb');
 /* GET login page. */
 router.get('/', function(req, res, next) {
   res.render('login',);
@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/', async (req,res)=>{
   try{
-    const check = await collection.findOne({email:req.body.email})
+    const check = await registration_info.findOne({email:req.body.email})
     if (check.password===req.body.password){
       res.render('users',{name:check.username,email:check.email,type:check.user_type})
     }

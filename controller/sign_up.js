@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var collection = require('../model/mongodb');
+var registration_info = require('../model/usersdb');
 
 
 //database connection
@@ -23,7 +23,7 @@ router.post('/',  async(req, res)=>{
     password:req.body.password,
     user_type:req.body.user_type
   };
-  await collection.insertMany([data]);
+  await registration_info.insertMany([data]);
 
   res.render('index');
 });
