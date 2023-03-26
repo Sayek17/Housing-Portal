@@ -10,10 +10,10 @@ const collection = require('./model/mongodb')
 
 
 
-var indexRouter = require('./controller/index');
-var usersRouter = require('./controller/users');
-var loginRouter = require('./controller/login');
-var sign_upRouter = require('./controller/sign_up');
+var indexRouter = require('./routes/index');
+var usersRouter = require('./routes/users');
+var loginRouter = require('./routes/login');
+var sign_upRouter = require('./routes/sign_up');
 
 
 // view engine setup
@@ -21,6 +21,7 @@ nunjucks.configure('views', {
   autoescape: true,
   express: app
 });
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 
