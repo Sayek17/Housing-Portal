@@ -5,10 +5,9 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var app = express();
 var nunjucks = require('nunjucks');
+
 //database connection
 const collection = require('./model/mongodb') 
-
-
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');

@@ -16,8 +16,18 @@ const logIn = new mongoose.Schema({
     user_type:{
         type:String,
         required:true
+    },
+    user_id:{
+        type:Number,
+        default:1
+    },
+    counter:{
+        type:Number,
+        default:0
     }
 });
+
+
 
 const registration_info = new mongoose.model('logIn', logIn);
 
