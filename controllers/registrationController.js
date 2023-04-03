@@ -1,48 +1,122 @@
 var registration_info = require('../model/usersdb');
+var bcrypt = require('bcrypt');
+var jwt = require('jsonwebtoken');
+var secret_key = 'secret'
+/////////////
 
-
-// sign up
 const signUpPage = (req, res) => {
   res.render('sign_up');
 }
 
 const signUpProcess = async(req, res) => {
-
-  var count = await registration_info.count()
-  count+=1
-  var data ={
-    email:req.body.email,
-    username:req.body.username,
-    password:req.body.password,
-    user_type:req.body.user_type,
-    user_id:count
-    
-  };
-  await registration_info.insertMany([data]);
-
-  
-
-  res.render('login');
+  // existing user check
+  // hashed password
+  // user creation
+  // token generate
+  try {
+    var count = await registration_info.count()
+    count+=1
+    var checkUser = await registration_info.findOne({email:req.body.email})
+    if (!checkUser ){
+      var password = req.body.password
+      var hash = bcrypt.hashSync(password, 5);
+      data = {
+        email:req.body.email,
+        username:req.body.username,
+        password:hash,
+        user_type:req.body.user_type,
+        user_id:count,
+        token:'temp-token'
+      }
+      await registration_info.insertMany([data]);
+      id = await registration_info.findOne({email:req.body.email})
+      payload = {
+        email:req.body.email,
+        username:req.body.username,
+        Id:id._id,
+        user_id:id.user_id
+      }
+      token = jwt.sign(payload,secret_key)
+      await registration_info.findOneAndUpdate({_id:id},{token:token})
+      res
+         .cookie('access_token', 'Bearer ' + token, {
+        expires: new Date(Date.now() + 1 * 3600000) 
+      })
+         .redirect(`/users/${id.user_id}`)
+    }
+    else{
+      res.send('user already exists, try a new email')
+    }
+  } catch (error) {
+    console.log(error)
+  }
 }
 
-// login
 const loginPage = (req, res) => {
-  res.render('login');
+  try {
+    var token = req.cookies
+    if ('access_token' in token){
+      token = token.access_token.split(' ')[1]
+      var decoded = jwt.verify(token, secret_key) 
+      res.redirect(`/users/${decoded.user_id}`);
+    } else {
+      res.render('login');
+    }
+  } catch (er) {
+    console.log(er)
+  }
+  
 };
 
-const loginAuth =  async (req,res, next) => {
-    try{
-      const check = await registration_info.findOne({email:req.body.email})
-      if (check.password===req.body.password){
+const loginAuth =  async (req,res) => {
+  try {
+    
+    try {
+      var email = req.body.email
+      var user = await registration_info.findOne({email:email})
+      var password = req.body.password
+      var check = await bcrypt.compare(password, user.password);
+    } catch (error) {
+      res.send('wrong credential')
+    }
+ 
+    if (check==true){
+      payload = {
+        email:user.email,
+        username:user.username,
+        Id:user._id,
+        user_id:user.user_id
+      }
+      var token = jwt.sign(payload,secret_key,{ expiresIn: '1h' })
+      await registration_info.findOneAndUpdate({email:user.email},{token:token})
+      res
+        .cookie('access_token', 'Bearer ' + token, {
+          expires: new Date(Date.now() + 1 * 3600000) 
+        })
+        .redirect(`/users/${user.user_id}`);
+    }
+    else{
+      res.send('wrong credential')
+    }
 
-        var user_id = check.user_id
-        res.redirect(`/users/${user_id}`)
-      }
-      else{
-        res.send('wrong password')
-      }} catch {
-        res.send('wrong details')
-      }
-  };
+  } catch (er) {
+    console.log(er)
+  }
+}
+// const loginAuth =  async (req,res) => {
+//     try{
+//       const check = await registration_info.findOne({email:req.body.email})
+//       if (check.password===req.body.password){
+//         var user_id = check.user_id
+
+//         res.redirect(`/users/${user_id}`)
+//       }
+//       else{
+//         res.send('wrong password')
+//       }} 
+//     catch {
+//         res.send('wrong details')
+//       }
+//   };
 
 module.exports = {loginPage, loginAuth, signUpPage, signUpProcess};

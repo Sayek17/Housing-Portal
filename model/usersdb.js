@@ -24,6 +24,10 @@ const logIn = new mongoose.Schema({
     counter:{
         type:Number,
         default:0
+    },
+    token:{
+        type:String,
+        required:true
     }
 });
 

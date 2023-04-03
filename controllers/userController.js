@@ -90,11 +90,9 @@ const updateProfile = async (req,res)=>{
   var user_id = req.params.user_id;
   var filter = { user_id:user_id };
   var update = { username:req.body.name,email:req.body.email};
-  // await console.log(req.body);
   await registration_info.findOneAndUpdate(filter,update)
   res.redirect(`/users/${user_id}`)
 
-  // res.render('users')
 }
 
 

@@ -3,25 +3,25 @@ var router = express.Router();
 
 var registration_info = require('../model/usersdb');
 var userController = require('../controllers/userController');
-
+var {auth} = require('../middlewares/authorize');
 //multer
 var storage = userController.storage
 var multer = require('multer');
 var upload = multer({storage:storage});
 
 /* GET users listing. */
-router.route('/:user_id')
-    .get(userController.userPage)
+router.route('/:user_id',)
+    .get(auth,userController.userPage)
     
     
 router.route('/:user_id/edit')
-    .get(userController.profileEdit)
-    .post(userController.updateProfile);
+    .get(auth,userController.profileEdit)
+    .post(auth,userController.updateProfile);
     
 
 
 router.route('/:user_id/posts')
-    .get(userController.postsPage)
-    .post(upload.single('house_pic'), userController.houseUpload);
+    .get(auth,userController.postsPage)
+    .post(auth,upload.single('house_pic'), userController.houseUpload);
 
 module.exports = router;
