@@ -27,17 +27,16 @@
   </nav>
 
 
-<!-- <h1>Welcome </h1>
-<h1>user name : {{name}}</h1>
-<h1>email address : {{email}}</h1>
-<h1>User Type {{type}}</h1>
-<h1>User Id: {{user_id}}</h1> -->
-
 <form action="/users/{{user_id}}/edit" method="post">
     <label for="name" >user name</label> 
     <input type="text" name="name" value="{{name}}"><br>
     <label for="email">Email</label>
     <input type="email" name="email" value="{{email}}"><br>
+    <label for="phone_number">Phone Number</label>
+    <input type="tel" name="phone_number" value="{{phone_number}}"><br>
+    <label for="address">Address</label>
+    <input type="text" name="address" value="{{address}}"><br>
+
     <button type="submit">Update</button>
 </form>
 

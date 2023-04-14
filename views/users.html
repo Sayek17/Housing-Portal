@@ -20,21 +20,52 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/users/{{user_id}}/posts">Your posts</a>
           </li>
-
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/users/{{user_id}}/logout"><button name="logout">Log out</button>  </a>
+          </li>
         </ul>
       </div>
     </div>
   </nav>
-<h1>Welcome </h1>
-<h1>user name : {{name}}</h1>
-<h1>email address : {{email}}</h1>
-<h1>User Type {{type}}</h1>
-<h1>User Id: {{user_id}}</h1>
-<form action="/users/{{user_id}}/edit">
-  <button type="submit">Edit</button>
-</form>
 
 
+<div class="container">
+<table class="table table-dark table-striped-columns">
+  <thead>
+  </thead>
+  <tbody>
+      <tr>
+        <th>user name</th>
+        <td>{{name}}</td>
+      </tr>
+      <tr>
+        <th>email address</th>
+        <td>{{email}}</td>
+      </tr>
+      <tr>
+        <th>User Type</th>
+        <td>{{type}}</td>
+      </tr>
+      <tr>
+        <th>Phone Number</th>
+        <td>{{phone_number}}</td>
+      </tr>
+      <tr>
+        <th>Address</th>
+        <td>{{address}}</td>
+      </tr>
+      <tr>
+        <th>
+          <form action="/users/{{user_id}}/edit">
+            <button type="submit" class="btn btn-secondary">Edit</button>
+          </form>
+        </th>
+      </tr>
+      
+  </tbody>
+
+</div>
+</table>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>post details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  </head>
+<body>
+
+        <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark" data-bs-theme="dark">
+            <div class="container-fluid">
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/users/{{user_id}}">Profile</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/users/{{user_id}}/posts">Your posts</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+
+
+
+    <div class="container">
+
+    <table class="table table-dark table-striped-columns">
+        <div style="height: 100%; width: 100%;" class="h-100 d-flex align-items-center justify-content-center">
+        <div style="width: 20%; height:20%;" class="">
+            <img src="/../images/{{house.picture}}" class="img-fluid img-thumbnail" >
+        </div>
+        </div>
+        <thead>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <td>{{house.name}}</td>
+            </tr>
+            <tr>
+                <th>Location</th>
+                <td>{{house.location}}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{house.price}}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{house.description}}</td>
+            </tr>
+            <tr>
+                <th>Phone Number</th>
+                <td>{{house.phone_number}}</td>
+            </tr>
+            <tr>
+                <th>For</th>
+                {% if house.for=="Seller"%}
+                <td>Sell</td>
+                {%elif house.for=="Renter"%}
+                <td>Rent</td>
+                {%endif%}
+            </tr>
+
+            {% if user!=undefined %}
+            <tr>
+                <th>Uploaded By</th>
+                <td>{{user.username}}</td>
+            </tr>
+            <tr>
+                <th>
+                    <a href="/users/{{user_id}}/posts/{{house.post_id}}/edit"><button >Edit</button</a>
+                </th>
+            </tr>
+            {%endif%}
+
+        </tbody>
+        
+    </table>
+    
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -21,6 +21,18 @@ const logIn = new mongoose.Schema({
         type:Number,
         default:1
     },
+    phone_number:{
+        type:Number,
+    },
+    address:{
+        type:String,
+    },
+    ba_number:{
+        type:String,
+    },
+    bkash:{
+        type:String,
+    },
     counter:{
         type:Number,
         default:0

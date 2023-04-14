@@ -20,12 +20,25 @@ const signUpProcess = async(req, res) => {
     if (!checkUser ){
       var password = req.body.password
       var hash = bcrypt.hashSync(password, 5);
+
+      var bkash = ''
+
+      var ba_number = ''
+      try{
+        var bkash = req.body.bkash
+        var ba_number = req.body.bkash
+      } catch (err){
+        console.log(err)
+      }
+
       data = {
         email:req.body.email,
         username:req.body.username,
         password:hash,
         user_type:req.body.user_type,
         user_id:count,
+        phone_number:req.body.phone_number,
+        address:req.body.address,
         token:'temp-token'
       }
       await registration_info.insertMany([data]);
@@ -103,20 +116,6 @@ const loginAuth =  async (req,res) => {
     console.log(er)
   }
 }
-// const loginAuth =  async (req,res) => {
-//     try{
-//       const check = await registration_info.findOne({email:req.body.email})
-//       if (check.password===req.body.password){
-//         var user_id = check.user_id
 
-//         res.redirect(`/users/${user_id}`)
-//       }
-//       else{
-//         res.send('wrong password')
-//       }} 
-//     catch {
-//         res.send('wrong details')
-//       }
-//   };
 
 module.exports = {loginPage, loginAuth, signUpPage, signUpProcess};

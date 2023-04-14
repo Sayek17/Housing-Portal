@@ -23,7 +23,11 @@ var storage = multer.diskStorage({
 
 // controllers
 const home = async function (req, res){
-  res.render('index')
+  var houses = await house_info.find({})
+  data = {
+    houses:houses
+  }
+  res.render('index',data)
 }
 
 const userPage = async function(req, res, next) {
@@ -37,6 +41,8 @@ try{
     type:get_data.user_type,
     user_id:get_data.user_id,
     houses:houses,
+    phone_number:get_data.phone_number,
+    address:get_data.address,
   }
 }
 catch(e){
@@ -45,20 +51,30 @@ catch(e){
 res.render('users',data);
 }
 
+const logout = async (req,res)=>{
+  res
+    .clearCookie('access_token')
+    .redirect('/');
+}
+
 
 const houseUpload = async (req,res) => {
   var user_id = req.params.user_id
   var get_data = await registration_info.findOne({user_id:user_id})
-  console.log(user_id)
   var data = {
+      post_id:get_data.counter,
       name:req.body.house_name,
       location:req.body.location,
-      price:req.body.price,
+      price:req.body.price, 
+      phone_number:req.body.phone_number, 
+      description:req.body.description,
       picture:req.body.house_name +'-'+ get_data.username+'-'+get_data.email+'-'+ get_data.counter,
-      uploaded_by:get_data._id
+      uploaded_by:get_data._id,
+      uploader_id:user_id,
+      for:get_data.user_type
   }
   await house_info.insertMany([data]);
-  res.redirect(`/users/${user_id}`)
+  res.redirect(`/users/${user_id}/posts`)
 }
 
 const postsPage = async (req,res)=>{
@@ -73,6 +89,43 @@ const postsPage = async (req,res)=>{
   res.render('posts', data)
 }
 
+const postDetails = async (req,res)=>{
+  var user_id = req.params.user_id
+  var user = await registration_info.findOne({user_id:user_id})
+  var post_id = Number(req.params.post_id)
+  var post = await house_info.findOne({post_id:post_id})
+  data = {
+    user_id:user_id,
+    house:post,
+    user:req.user
+  }
+  res.render('postDetails', data)
+}
+
+const postEdit = async (req,res) =>{
+  var post_id = Number(req.params.post_id)
+  var house = await house_info.findOne({post_id:post_id})
+  data = {
+    user:req.user,
+    house:house
+  }
+  console.log('controler data: '+req.user)
+  res.render('postEdit',data)
+}
+
+const postUpdate = async (req,res) =>{
+  var filter = {post_id:req.params.post_id}
+  var update = {
+    name:req.body.name,
+    location:req.body.location,
+    price:req.body.price,
+    description:req.body.description,
+    phone_number:req.body.phone_number,
+  }
+  await house_info.findOneAndUpdate(filter,update)
+  res.redirect(`/users/${req.user.user_id}/posts/${req.params.post_id}`)
+}
+
 const profileEdit = async (req,res)=>{
   var user_id = req.params.user_id
   var user = await registration_info.findOne({user_id:user_id})
@@ -81,6 +134,8 @@ const profileEdit = async (req,res)=>{
     name:user.username,
     type:user.user_type,
     user_id:user.user_id,
+    address:user.address,
+    phone_number:user.phone_number,
   }
   res.render('profileEdit',data)
 }
@@ -89,7 +144,12 @@ const updateProfile = async (req,res)=>{
   
   var user_id = req.params.user_id;
   var filter = { user_id:user_id };
-  var update = { username:req.body.name,email:req.body.email};
+  var update = { 
+    username:req.body.name,
+    email:req.body.email,
+    phone_number:req.body.phone_number,
+    address:req.body.address
+  };
   await registration_info.findOneAndUpdate(filter,update)
   res.redirect(`/users/${user_id}`)
 
@@ -99,9 +159,13 @@ const updateProfile = async (req,res)=>{
 module.exports = {
   userPage,
   home,
+  logout,
   houseUpload,
   storage,
   postsPage,
+  postDetails,
+  postEdit,
+  postUpdate,
   profileEdit,
   updateProfile
 }
