@@ -40,6 +40,10 @@ const house = new mongoose.Schema({
     for:{
         type:String,
         required: true
+    },
+    approval:{
+        type:Boolean,
+        default:false
     }
 })
 

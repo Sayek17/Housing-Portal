@@ -10,6 +10,7 @@ var nunjucks = require('nunjucks');
 const collection = require('./model/mongodb') 
 
 var indexRouter = require('./routes/index');
+var adminRouter = require('./routes/admin');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var sign_upRouter = require('./routes/sign_up');
@@ -34,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // routers setup
 app.use('/', indexRouter);
+app.use('/admin', adminRouter);
 app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/sign_up', sign_upRouter);

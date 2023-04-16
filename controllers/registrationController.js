@@ -2,17 +2,13 @@ var registration_info = require('../model/usersdb');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 var secret_key = 'secret'
-/////////////
+
 
 const signUpPage = (req, res) => {
   res.render('sign_up');
 }
 
 const signUpProcess = async(req, res) => {
-  // existing user check
-  // hashed password
-  // user creation
-  // token generate
   try {
     var count = await registration_info.count()
     count+=1
@@ -20,16 +16,6 @@ const signUpProcess = async(req, res) => {
     if (!checkUser ){
       var password = req.body.password
       var hash = bcrypt.hashSync(password, 5);
-
-      var bkash = ''
-
-      var ba_number = ''
-      try{
-        var bkash = req.body.bkash
-        var ba_number = req.body.bkash
-      } catch (err){
-        console.log(err)
-      }
 
       data = {
         email:req.body.email,
@@ -47,7 +33,8 @@ const signUpProcess = async(req, res) => {
         email:req.body.email,
         username:req.body.username,
         Id:id._id,
-        user_id:id.user_id
+        user_id:id.user_id,
+        approval:id.approval,
       }
       token = jwt.sign(payload,secret_key)
       await registration_info.findOneAndUpdate({_id:id},{token:token})
@@ -55,7 +42,7 @@ const signUpProcess = async(req, res) => {
          .cookie('access_token', 'Bearer ' + token, {
         expires: new Date(Date.now() + 1 * 3600000) 
       })
-         .redirect(`/users/${id.user_id}`)
+         .redirect('/')
     }
     else{
       res.send('user already exists, try a new email')
@@ -65,13 +52,20 @@ const signUpProcess = async(req, res) => {
   }
 }
 
+
 const loginPage = (req, res) => {
   try {
     var token = req.cookies
     if ('access_token' in token){
       token = token.access_token.split(' ')[1]
-      var decoded = jwt.verify(token, secret_key) 
-      res.redirect(`/users/${decoded.user_id}`);
+      var decoded = jwt.verify(token, secret_key)
+      if (decoded.approval===true){
+        res.redirect(`/users/${decoded.user_id}`);
+      }
+      else {
+        res.send('Account not approved yet by the admin')
+      } 
+      
     } else {
       res.render('login');
     }
@@ -98,15 +92,22 @@ const loginAuth =  async (req,res) => {
         email:user.email,
         username:user.username,
         Id:user._id,
-        user_id:user.user_id
+        user_id:user.user_id,
+        approval:user.approval
       }
       var token = jwt.sign(payload,secret_key,{ expiresIn: '1h' })
       await registration_info.findOneAndUpdate({email:user.email},{token:token})
-      res
-        .cookie('access_token', 'Bearer ' + token, {
+      if (user.approval===true){
+        res
+          .cookie('access_token', 'Bearer ' + token, {
           expires: new Date(Date.now() + 1 * 3600000) 
         })
-        .redirect(`/users/${user.user_id}`);
+          .redirect(`/users/${user.user_id}`);
+      }
+      else {
+        res.send('Account not approved yet by the admin')
+      } 
+
     }
     else{
       res.send('wrong credential')

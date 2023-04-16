@@ -40,6 +40,10 @@ const logIn = new mongoose.Schema({
     token:{
         type:String,
         required:true
+    },
+    approval:{
+        type:Boolean,
+        default:false
     }
 });
 
