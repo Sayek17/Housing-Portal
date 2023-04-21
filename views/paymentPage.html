@@ -1,7 +1,7 @@
 {% extends "navbar.html" %}
 {% block content %}
 <div class="container">
-    <form>
+    <form action="" method="post">
         <table class="table table-dark table-striped-columns">
             <div style="height: 100%; width: 100%;" class="h-100 d-flex align-items-center justify-content-center">
             </div>
@@ -9,19 +9,19 @@
             </thead>
             <tbody>
                 <tr>
-                    <th><label for="name" class="form-label">Name</label></th>
+                    <th><label for="name" class="form-label">Full Name</label></th>
                     <td><input type="text" class="form-control" name="name"></td>
                 </tr>
                 <tr>
-                    <th><label for="creditCard" class="form-label">Credit Card Number</label></th>
-                    <td><input type="text" class="form-control" name="creditCard"></td>
+                    <th><label class="form-label">Amount</label></th>
+                    <td><label >12$</label></td>
                 </tr>
                 <tr>
-                    <th><label for="amount" class="form-label">Amount</label></th>
-                    <td></td>
+                    <th><label for="bkash/creditCard" class="form-label">Bkash Or Credit Card Number</label></th>
+                    <td><input type="text" class="form-control" name="bkash/creditCard"></td>
                 </tr>
                 <tr>
-                    <th><button type="submit" class="btn btn-primary">Submit</button></th>
+                    <th><button type="submit" class="btn btn-primary">Confirm Purchase</button></th>
 
                 </tr>
             </tbody>

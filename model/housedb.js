@@ -51,7 +51,14 @@ const house = new mongoose.Schema({
     approval:{
         type:Boolean,
         default:false
-    }
+    },
+    status:{
+        type:String,
+        default:'Available'
+    },
+    soldTo:{
+        type:String,
+    },
 })
 
 const house_info = new mongoose.model('house', house)

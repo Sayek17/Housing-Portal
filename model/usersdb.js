@@ -44,6 +44,13 @@ const logIn = new mongoose.Schema({
     approval:{
         type:Boolean,
         default:false
+    },
+    bkash:{
+        type:String,
+
+    },
+    bank_acc_number:{
+        type:String,
     }
 });
 
