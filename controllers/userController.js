@@ -25,7 +25,8 @@ var storage = multer.diskStorage({
 const home = async function (req, res){
   var houses = await house_info.find({})
   data = {
-    houses:houses
+    houses:houses,
+    user:req.user,
   }
   res.render('index',data)
 }
@@ -43,6 +44,7 @@ try{
     houses:houses,
     phone_number:get_data.phone_number,
     address:get_data.address,
+    user:req.user,
   }
 }
 catch(e){
@@ -69,8 +71,10 @@ const houseUpload = async (req,res) => {
       phone_number:req.body.phone_number, 
       description:req.body.description,
       picture:req.body.house_name +'-'+ get_data.username+'-'+get_data.email+'-'+ get_data.counter,
+      uploaderName:get_data.username,
       uploaded_by:get_data._id,
       uploader_id:user_id,
+      uploader_type:get_data.user_type,
       for:get_data.user_type
   }
   await house_info.insertMany([data]);
@@ -91,13 +95,14 @@ const postsPage = async (req,res)=>{
 
 const postDetails = async (req,res)=>{
   var user_id = req.params.user_id
-  var user = await registration_info.findOne({user_id:user_id})
+  var user = await registration_info.findOne({user_id:req.params.user_id})
   var post_id = Number(req.params.post_id)
-  var post = await house_info.findOne({post_id:post_id})
+  var post = await house_info.findOne({post_id:req.params.post_id,uploader_id:req.params.user_id})
   data = {
     user_id:user_id,
     house:post,
-    user:req.user
+    current_user:req.user,
+    user:user
   }
   res.render('postDetails', data)
 }
@@ -155,7 +160,12 @@ const updateProfile = async (req,res)=>{
 
 }
 
-
+const paymentPage = async(req,res)=>{
+  data = {
+    user:req.user
+  }
+  res.render('paymentPage',data)
+}
 module.exports = {
   userPage,
   home,
@@ -167,5 +177,6 @@ module.exports = {
   postEdit,
   postUpdate,
   profileEdit,
-  updateProfile
+  updateProfile,
+  paymentPage,
 }

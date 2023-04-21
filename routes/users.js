@@ -27,6 +27,8 @@ router.route('/:user_id/posts')
 router.route('/:user_id/posts/:post_id')
     .get(auth2,userController.postDetails);
 
+router.route('/:user_id/posts/:post_id/payment')
+    .get(auth2,userController.paymentPage);
 
 
 router.route('/:user_id/posts/:post_id/edit')

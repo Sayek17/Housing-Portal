@@ -69,7 +69,7 @@ const admin_user_approval = async (req,res) =>{
         await registration_info.findOneAndUpdate({user_id:user_id},{approval:false})
         res.redirect('/admin')
     } else if (Number(what)){
-        await house_info.findOneAndUpdate({post_id:what},{approval:true})
+        await house_info.findOneAndUpdate({post_id:what,uploader_id:user_id},{approval:true})
         res.redirect('/admin')
     }
 

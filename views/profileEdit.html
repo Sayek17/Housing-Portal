@@ -17,9 +17,11 @@
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/users/{{user_id}}">Profile</a>
           </li>
+          {%if(user.user_type!="Customer")%}
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/users/{{user_id}}/posts">Your posts</a>
           </li>
+          {%endif%}
 
         </ul>
       </div>

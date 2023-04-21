@@ -18,8 +18,13 @@
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/users/{{user_id}}">Profile</a>
                   </li>
+                  {%if(user.user_type!="Customer")%}
                   <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/users/{{user_id}}/posts">Your posts</a>
+                  </li>
+                  {%endif%}
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/users/{{user_id}}/logout"><button name="logout">Log out</button>  </a>
                   </li>
                 </ul>
               </div>
@@ -68,16 +73,28 @@
                 {%endif%}
             </tr>
 
-            {% if user!=undefined %}
+            {% if (user!=undefined)  %}
             <tr>
                 <th>Uploaded By</th>
                 <td>{{user.username}}</td>
             </tr>
-            <tr>
-                <th>
-                    <a href="/users/{{user_id}}/posts/{{house.post_id}}/edit"><button >Edit</button</a>
-                </th>
-            </tr>
+              {%if (house.uploader_id==current_user.user_id and house.uploaderName==current_user.username)%}
+              <tr>
+                  <th>
+                      <a href="/users/{{user_id}}/posts/{{house.post_id}}/edit"><button >Edit</button></a>
+                  </th>
+              </tr>
+              {%endif%}
+            {%endif%}
+            {%if (current_user.user_type=="Customer")%}
+                <tr>
+                  <th>
+                      <a href="/users/{{user_id}}/posts/{{house.post_id}}/payment"><button >
+
+                        Buy Now
+                      </button></a>
+                  </th>
+                </tr>
             {%endif%}
 
         </tbody>

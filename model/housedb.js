@@ -29,6 +29,10 @@ const house = new mongoose.Schema({
         type:Number,
         required: true
     },
+    uploaderName:{
+        type:String,
+        required: true
+    },
     uploaded_by:{
         type:String,
         required: true
@@ -36,6 +40,9 @@ const house = new mongoose.Schema({
     uploader_id:{
         type:Number,
         required: true
+    },
+    uploader_type:{
+        type:String
     },
     for:{
         type:String,

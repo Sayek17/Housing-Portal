@@ -28,21 +28,21 @@ const signUpProcess = async(req, res) => {
         token:'temp-token'
       }
       await registration_info.insertMany([data]);
-      id = await registration_info.findOne({email:req.body.email})
-      payload = {
-        email:req.body.email,
-        username:req.body.username,
-        Id:id._id,
-        user_id:id.user_id,
-        approval:id.approval,
-      }
-      token = jwt.sign(payload,secret_key)
-      await registration_info.findOneAndUpdate({_id:id},{token:token})
-      res
-         .cookie('access_token', 'Bearer ' + token, {
-        expires: new Date(Date.now() + 1 * 3600000) 
-      })
-         .redirect('/')
+      // id = await registration_info.findOne({email:req.body.email})
+      // payload = {
+      //   email:req.body.email,
+      //   username:req.body.username,
+      //   Id:id._id,
+      //   user_id:id.user_id,
+      //   approval:id.approval,
+      // }
+      // token = jwt.sign(payload,secret_key)
+      // await registration_info.findOneAndUpdate({_id:id},{token:token})
+      res.redirect('/login')
+      //    .cookie('access_token', 'Bearer ' + token, {
+      //   expires: new Date(Date.now() + 1 * 3600000) 
+      // })
+        //  .redirect('/login')
     }
     else{
       res.send('user already exists, try a new email')
@@ -86,31 +86,39 @@ const loginAuth =  async (req,res) => {
     } catch (error) {
       res.send('wrong credential')
     }
+    if (user.approval==true){
  
-    if (check==true){
-      payload = {
-        email:user.email,
-        username:user.username,
-        Id:user._id,
-        user_id:user.user_id,
-        approval:user.approval
-      }
-      var token = jwt.sign(payload,secret_key,{ expiresIn: '1h' })
-      await registration_info.findOneAndUpdate({email:user.email},{token:token})
-      if (user.approval===true){
-        res
-          .cookie('access_token', 'Bearer ' + token, {
-          expires: new Date(Date.now() + 1 * 3600000) 
-        })
-          .redirect(`/users/${user.user_id}`);
-      }
-      else {
-        res.send('Account not approved yet by the admin')
-      } 
+      if (check==true){
+        payload = {
+          email:user.email,
+          username:user.username,
+          Id:user._id,
+          user_type:user.user_type,
+          phone_number:user.phone_number,
+          address:user.address,
+          user_id:user.user_id,
+          approval:user.approval,
+          
+        }
+        var token = jwt.sign(payload,secret_key,{ expiresIn: '1h' })
+        await registration_info.findOneAndUpdate({email:user.email},{token:token})
+        if (user.approval===true){
+          res
+            .cookie('access_token', 'Bearer ' + token, {
+            expires: new Date(Date.now() + 1 * 3600000) 
+          })
+            .redirect(`/users/${user.user_id}`);
+        }
+        else {
+          res.send('Account not approved yet by the admin')
+        } 
 
-    }
-    else{
-      res.send('wrong credential')
+      }
+      else{
+        res.send('wrong credential')
+      }
+    } else{
+      res.send("user not approved yet!")
     }
 
   } catch (er) {
