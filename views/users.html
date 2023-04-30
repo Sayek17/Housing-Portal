@@ -7,28 +7,8 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
       </head>
 <body>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark" data-bs-theme="dark">
-    <div class="container-fluid">
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/users/{{user_id}}">Profile</a>
-          </li>
-          {%if(user.user_type!="Customer")%}
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/users/{{user_id}}/posts">Your posts</a>
-          </li>
-          {%endif%}
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/users/{{user_id}}/logout"><button name="logout">Log out</button>  </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+{% extends "navbar.html" %}
+{% block content %}
 
 
 <div class="container">
@@ -38,36 +18,41 @@
   <tbody>
       <tr>
         <th>user name</th>
-        <td>{{name}}</td>
+        <td>{{user.username}}</td>
       </tr>
       <tr>
         <th>email address</th>
-        <td>{{email}}</td>
+        <td>{{user.email}}</td>
       </tr>
       <tr>
         <th>User Type</th>
-        <td>{{type}}</td>
+        <td>{{user.user_type}}</td>
       </tr>
       <tr>
         <th>Phone Number</th>
-        <td>{{phone_number}}</td>
+        <td>{{user.phone_number}}</td>
       </tr>
       <tr>
         <th>Address</th>
-        <td>{{address}}</td>
+        <td>{{user.address}}</td>
+      </tr>
+      <tr>
+        <th>Facebook link</th>
+        <td>{{user.facebook_id}}</td>
       </tr>
       <tr>
         <th>
-          <form action="/users/{{user_id}}/edit">
+          <form action="/users/{{user.user_id}}/edit">
             <button type="submit" class="btn btn-secondary">Edit</button>
           </form>
         </th>
       </tr>
-      
   </tbody>
 
 </div>
 </table>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+{% endblock %}
 </body>
+
 </html>

@@ -28,12 +28,26 @@
               </li>
               {%if(user.user_type!="Customer")%}
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/users/{{user.user_id}}/posts">Your posts</a>
+                  <a class="nav-link active" aria-current="page" href="/users/{{user.user_id}}/posts">Your Houses</a>
+                </li>
+                {%if (user.user_type=="Seller")%}
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/users/{{user.user_id}}/houseHistory">Houses Sold</a>
+                  </li>
+                {%elif (user.user_type=="Renter")%}
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/users/{{user.user_id}}/houseHistory">Houses Rented</a>
+                  </li>
+                {%endif%}
+              {%else%}
+                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="/users/{{user.user_id}}/houseHistory">Houses Bought</a>
                 </li>
               {%endif%}
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/users/{{user.user_id}}/logout"><button name="logout">Log out</button>  </a>
-                </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/users/{{user.user_id}}/logout"><button name="logout">Log out</button>  </a>
+              </li>
+
             {%endif%}
 
             

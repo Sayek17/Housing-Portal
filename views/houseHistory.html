@@ -1,0 +1,163 @@
+{% extends "navbar.html" %}
+{% block content %}
+
+{%for house in houses%}
+    {%if (user.user_type=="Customer")%}
+        {%if (house.soldTo==user.user_id)%}
+            <table class="table table-dark table-striped-columns">
+                <div style="height: 100%; width: 100%;" class="h-100 d-flex align-items-center justify-content-center">
+                <div style="width: 20%; height:20%;" class="">
+                    <img src="/../images/{{house.picture}}" class="img-fluid img-thumbnail" >
+                </div>
+                </div>
+                <thead>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>{{house.name}}</td>
+                    </tr>
+                    <tr>
+                        <th>Location</th>
+                        <td>{{house.location}}</td>
+                    </tr>
+                    <tr>
+                        <th>Price</th>
+                        <td>{{house.price}}</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{house.description}}</td>
+                    </tr>
+                    <tr>
+                        <th>Owner Phone Number</th>
+                        <td>{{house.uploader_phone}}</td>
+                    </tr>
+                    <tr>
+                        <th>For</th>
+                        {% if house.for=="Seller"%}
+                        <td>Sell</td>
+                        {%elif house.for=="Renter"%}
+                        <td>Rent</td>
+                        {%endif%}
+                    </tr>
+                    <tr>
+                    <th>Status</th>
+                    <td>{{house.status}}</td>
+                    </tr>
+                    {% if (c_user!=undefined)  %}
+                    <tr>
+                        <th>Uploaded By</th>
+                        <td>{{c_user.username}}</td>
+                    </tr>
+
+                    {%if (house.uploader_id==user.user_id and house.uploaderName==user.username)%}
+                    <tr>
+                        <th>
+                            <a href="/users/{{user_id}}/posts/{{house.post_id}}/edit"><button >Edit</button></a>
+                        </th>
+                    </tr>
+                    {%endif%}
+                    {%endif%}
+                    {%if (user.user_type=="Customer" and house.status=="Available")%}
+                        <tr>
+                        <th>
+                            <a href="/users/{{user_id}}/posts/{{house.post_id}}/payment"><button >
+
+                                Buy Now
+                            </button></a>
+                        </th>
+                        </tr>
+                    {%endif%}
+
+                </tbody>
+                
+            </table>
+        {%endif%}
+    {%else%}
+
+        {%if (house.uploader_id==user.user_id)%}
+
+            {%if (house.status=="unavailable" or house.status=="pending confirmation")%}
+                <table class="table table-dark table-striped-columns">
+                    <div style="height: 100%; width: 100%;" class="h-100 d-flex align-items-center justify-content-center">
+                    <div style="width: 20%; height:20%;" class="">
+                        <img src="/../images/{{house.picture}}" class="img-fluid img-thumbnail" >
+                    </div>
+                    </div>
+                    <thead>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>Name</th>
+                            <td>{{house.name}}</td>
+                        </tr>
+                        <tr>
+                            <th>Location</th>
+                            <td>{{house.location}}</td>
+                        </tr>
+                        <tr>
+                            <th>Price</th>
+                            <td>{{house.price}}</td>
+                        </tr>
+                        <tr>
+                            <th>Description</th>
+                            <td>{{house.description}}</td>
+                        </tr>
+                        <tr>
+                            <th>Phone Number</th>
+                            <td>{{house.uploader_phone}}</td>
+                        </tr>
+                        <tr>
+                            <th>For</th>
+                            {% if house.for=="Seller"%}
+                            <td>Sell</td>
+                            {%elif house.for=="Renter"%}
+                            <td>Rent</td>
+                            {%endif%}
+                        </tr>
+                        <tr>
+                        <th>Status</th>
+                        <td>{{house.status}}</td>
+                        </tr>
+                        {% if (c_user!=undefined)  %}
+                        <tr>
+                            <th>Uploaded By</th>
+                            <td>{{c_user.username}}</td>
+                        </tr>
+
+                        {%if (house.uploader_id==user.user_id and house.uploaderName==user.username)%}
+                        <tr>
+                            <th>
+                                <a href="/users/{{user_id}}/posts/{{house.post_id}}/edit"><button >Edit</button></a>
+                            </th>
+                        </tr>
+                        {%endif%}
+                        {%endif%}
+                        {%if (user.user_type=="Customer" and house.status=="Available")%}
+                            <tr>
+                            <th>
+                                <a href="/users/{{user_id}}/posts/{{house.post_id}}/payment"><button >
+
+                                    Buy Now
+                                </button></a>
+                            </th>
+                            </tr>
+                        {%endif%}
+                        {%if (house.status=="pending confirmation")%}
+                        <tr>
+                            <td>
+                                <a href="/users/{{user.user_id}}/posts/{{house.post_id}}/dealConfirm"><button >Confirm Deal</button></a>
+                                <a href="/users/{{user.user_id}}/posts/{{house.post_id}}/dealDelete"><button >Delete</button></a>
+                            </td>
+                        </tr>
+                        {%endif%}
+                    </tbody>
+                </table>
+            {%endif%}
+        {%endif%}
+    {%endif%}
+{%endfor%}
+{% endblock %}
+
+

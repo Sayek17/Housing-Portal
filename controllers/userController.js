@@ -1,7 +1,6 @@
-// const express = require('express');
 const registration_info = require('../model/usersdb')
 var house_info = require('../model/housedb');
-
+const nodemailer = require("nodemailer");
 // multer config
 var multer = require('multer');
 var storage = multer.diskStorage({
@@ -9,14 +8,14 @@ var storage = multer.diskStorage({
         cb(null,'./public/images')
     },
     filename:  async (req,file,cb)=>{
-        var user_id = req.params.user_id
-        var get_data = await registration_info.findOne({user_id:user_id})
-        var counter = get_data.counter
+        var user_id = req.user.user_id
+        var user_data = await registration_info.findOne({user_id:user_id})
+        var counter = user_data.counter
         counter = counter +1
-        var filter = {user_id:get_data.user_id}
+        var filter = {user_id:user_data.user_id}
         var update = {counter:counter}
         await registration_info.findOneAndUpdate(filter,update)
-        cb(null, req.body.house_name +'-'+ get_data.username+'-'+get_data.email+'-'+counter)
+        cb(null, req.body.house_name +'-'+ user_data.username+'-'+user_data.email+'-'+counter)
     }
 })
 
@@ -31,24 +30,13 @@ const home = async function (req, res){
   res.render('index',data)
 }
 
-const userPage = async function(req, res, next) {
+const userPage = async function(req, res) {
   var user_id = req.params.user_id
-try{
-  var get_data = await registration_info.findOne({user_id:user_id})
-  var houses = await house_info.find({uploaded_by:get_data._id})
-  var data = {
-    email:get_data.email,
-    name:get_data.username,
-    type:get_data.user_type,
-    user_id:get_data.user_id,
-    houses:houses,
-    phone_number:get_data.phone_number,
-    address:get_data.address,
-    user:req.user,
-  }
-}
-catch(e){
-  await console.log(`the error is ${e}`)
+var get_data = await registration_info.findOne({user_id:user_id})
+var houses = await house_info.find({uploaded_by:get_data._id})
+var data = {
+  houses:houses,
+  user:get_data,
 }
 res.render('users',data);
 }
@@ -68,14 +56,16 @@ const houseUpload = async (req,res) => {
       name:req.body.house_name,
       location:req.body.location,
       price:req.body.price, 
-      phone_number:req.body.phone_number, 
       description:req.body.description,
       picture:req.body.house_name +'-'+ get_data.username+'-'+get_data.email+'-'+ get_data.counter,
       uploaderName:get_data.username,
       uploaded_by:get_data._id,
       uploader_id:user_id,
       uploader_type:get_data.user_type,
-      for:get_data.user_type
+      uploader_phone:get_data.phone_number,
+      for:get_data.user_type,
+      bkashNumber:req.body.bkashNumber, 
+      ownerBankAccountNumber:req.body.ownerBankAccountNumber,
   }
   await house_info.insertMany([data]);
   res.redirect(`/users/${user_id}/posts`)
@@ -87,8 +77,8 @@ const postsPage = async (req,res)=>{
   var id = user._id
   data = {
     user_id:user_id,
-    houses: await house_info.find({uploaded_by:id})
-  
+    houses: await house_info.find({uploaded_by:id}),
+    user:req.user,
   }
   res.render('posts', data)
 }
@@ -101,8 +91,8 @@ const postDetails = async (req,res)=>{
   data = {
     user_id:user_id,
     house:post,
-    current_user:req.user,
-    user:user
+    user:req.user,
+    c_user:user,
   }
   res.render('postDetails', data)
 }
@@ -141,6 +131,8 @@ const profileEdit = async (req,res)=>{
     user_id:user.user_id,
     address:user.address,
     phone_number:user.phone_number,
+    user:req.user,
+    facebook_id:user.facebook_id
   }
   res.render('profileEdit',data)
 }
@@ -153,7 +145,8 @@ const updateProfile = async (req,res)=>{
     username:req.body.name,
     email:req.body.email,
     phone_number:req.body.phone_number,
-    address:req.body.address
+    address:req.body.address,
+    facebook_id:req.body.facebook_id,
   };
   await registration_info.findOneAndUpdate(filter,update)
   res.redirect(`/users/${user_id}`)
@@ -161,10 +154,94 @@ const updateProfile = async (req,res)=>{
 }
 
 const paymentPage = async(req,res)=>{
+  const house = await house_info.findOne({post_id:req.params.post_id})
+  const houseOwner = await registration_info.findOne({_id:house.uploaded_by})
   data = {
-    user:req.user
+    user:req.user,
+    post_id:req.params.post_id,
+    payMethod:req.body.payMethod,
+    house:house,
+    houseOwner:houseOwner,
+
   }
   res.render('paymentPage',data)
+}
+
+const payment = async(req,res)=>{
+  var payMethod = req.body.payMethod
+  var house = await house_info.findOne({_id:req.body.houseId})
+  var emailText = `username:${req.user.username} user ID:${req.user.user_id}, Bank account number is: ${req.body.bankId},
+  for house:${house.name}, price:${house.price} Taka 
+  Please verify the transaction and confirm it from your housing portal account.`
+  if (payMethod=="Owner Bkash Number"){
+    var emailText = `username:${req.user.username} user ID:${req.user.user_id}, Bkash trx number is: ${req.body.trx}. 
+    for house:${house.name}, price:${house.price} Taka 
+    Please verify the transaction and confirm it from your housing portal account.`
+  }
+  const emailFrom = "md.isa.sayek.huda@g.bracu.ac.bd"
+  var houseOwner = await registration_info.findOne({_id:req.body.houseOwnerId})
+  const emailTO = `${houseOwner.email}`
+
+  await house_info.findOneAndUpdate({_id:house._id},{status:"pending confirmation",soldTo:req.user.user_id})
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: `${emailFrom}`, // replace with your actual Gmail email address
+      pass: "vihmyswmqrtxitpj" // replace with your actual Gmail email password
+    },
+  });
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: `"Housing Portal" <${emailFrom}>`, // sender address
+    to: `${emailTO}`, // list of receivers
+    subject: "Housing Portal", // Subject line
+    text: `${emailText}`, // plain text body
+    html: `<b>${emailText}</b`, // html body
+  });
+  res.redirect('/');
+
+}
+const houseHistory = async(req,res)=>{
+  data = {
+    user:req.user,
+    houses: await house_info.find()
+  }
+  res.render('houseHistory',data)
+    
+}
+
+const dealConfirm = async(req,res)=>{
+  var house = await house_info.findOne({post_id:req.params.post_id})
+  var emailText = `Congratulation on your purchase of the house named:${house.name} from ${house.uploaderName}`
+  const emailFrom = "md.isa.sayek.huda@g.bracu.ac.bd"
+  var houseSoldTo = await registration_info.findOne({user_id:house.soldTo})
+  const emailTO = `${houseSoldTo.email}`
+  await house_info.findOneAndUpdate({_id:house._id},{status:"unavailable"})
+  let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: `${emailFrom}`, // replace with your actual Gmail email address
+      pass: "vihmyswmqrtxitpj" // replace with your actual Gmail email password
+    },
+  });
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: `"Housing Portal" <${emailFrom}>`, // sender address
+    to: `${emailTO}`, // list of receivers
+    subject: "Housing Portal", // Subject line
+    text: `${emailText}`, // plain text body
+    html: `<b>${emailText}</b`, // html body
+  });
+  res.redirect('/');
+}
+const dealDelete = async(req,res)=>{
+  var house = await house_info.findOne({post_id:req.params.post_id})
+  await house_info.findOneAndUpdate({_id:house._id},{status:"Available",soldTo:''})
+  res.redirect('/')
 }
 module.exports = {
   userPage,
@@ -179,4 +256,8 @@ module.exports = {
   profileEdit,
   updateProfile,
   paymentPage,
+  payment,
+  houseHistory,
+  dealConfirm,
+  dealDelete,
 }

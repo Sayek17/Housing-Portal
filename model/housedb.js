@@ -25,9 +25,12 @@ const house = new mongoose.Schema({
         type:String,
         required: true
     },
-    phone_number:{
-        type:Number,
+    bkashNumber:{
+        type:String,
         required: true
+    },
+    ownerBankAccountNumber:{
+        type:String,
     },
     uploaderName:{
         type:String,
@@ -42,6 +45,9 @@ const house = new mongoose.Schema({
         required: true
     },
     uploader_type:{
+        type:String
+    },
+    uploader_phone:{
         type:String
     },
     for:{
@@ -59,6 +65,11 @@ const house = new mongoose.Schema({
     soldTo:{
         type:String,
     },
+    paymentMethod:{
+        type:String,
+    },
+
+    
 })
 
 const house_info = new mongoose.model('house', house)

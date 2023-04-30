@@ -7,4 +7,6 @@ router.route('/')
     .get(registrationController.loginPage)
     .post(registrationController.loginAuth);
 
+
 module.exports = router;
+

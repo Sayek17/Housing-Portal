@@ -15,7 +15,7 @@ const adminPage = async function (req,res) {
     res.render('adminPage',data)
 }
 
-const adminAuthenticate = async (req,res) => {
+const adminAuthenticate = async (req,res) => { // creating admin profile
     data = {
         username:'isa',
         password:1234,
@@ -25,14 +25,15 @@ const adminAuthenticate = async (req,res) => {
     if (check==undefined){
         await admin_info.insertMany([data])
     }
-    payload = {
+    payload = { // creating token info
         username:data.username,
         password:data.password,
     }
     var admin = await admin_info.findOne({username:payload.username})
+
     if (req.body.username==admin.username && req.body.password==admin.password){
         var token = jwt.sign(payload,secret_key)
-        await admin_info.findOneAndUpdate({username:admin.username},{token:token})
+        // await admin_info.findOneAndUpdate({username:admin.username},{token:token})
         var users = await registration_info.find({})
         var houses = await house_info.find({})
 
@@ -42,8 +43,7 @@ const adminAuthenticate = async (req,res) => {
         }
         res
             .cookie('access_token_admin', 'Bearer ' + token, {
-            expires: new Date(Date.now() + 1 * 3600000) // cookie will be removed after 8 hours
-          })
+            expires: new Date(Date.now() + 1 * 3600000)}) // cookie will be removed after 8 hours
             .render('adminPage',data)
     }
     else{
@@ -68,7 +68,7 @@ const admin_user_approval = async (req,res) =>{
     } else if (what==="revoke") {
         await registration_info.findOneAndUpdate({user_id:user_id},{approval:false})
         res.redirect('/admin')
-    } else if (Number(what)){
+    } else if (Number(what)){// if what == numeric then its a post
         await house_info.findOneAndUpdate({post_id:what,uploader_id:user_id},{approval:true})
         res.redirect('/admin')
     }

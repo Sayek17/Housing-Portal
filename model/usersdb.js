@@ -22,34 +22,20 @@ const logIn = new mongoose.Schema({
         default:1
     },
     phone_number:{
-        type:Number,
+        type:String,
     },
     address:{
-        type:String,
-    },
-    ba_number:{
-        type:String,
-    },
-    bkash:{
         type:String,
     },
     counter:{
         type:Number,
         default:0
     },
-    token:{
-        type:String,
-        required:true
-    },
     approval:{
         type:Boolean,
         default:false
     },
-    bkash:{
-        type:String,
-
-    },
-    bank_acc_number:{
+    facebook_id:{
         type:String,
     }
 });

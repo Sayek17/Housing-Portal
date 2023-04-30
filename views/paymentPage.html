@@ -1,7 +1,12 @@
 {% extends "navbar.html" %}
 {% block content %}
+ {%if payMethod=="bkash"%}
+    {% set payMethod = "Owner Bkash Number"%} ,{%set account = house.bkashNumber %}
+ {%else%}
+    {% set payMethod = "Owner Bank Account"%}, {% set account = house.ownerBankAccountNumber %}
+ {%endif%}
 <div class="container">
-    <form action="" method="post">
+    <form action="/users/{{user.user_id}}/{{post_id}}/payment" method="post">
         <table class="table table-dark table-striped-columns">
             <div style="height: 100%; width: 100%;" class="h-100 d-flex align-items-center justify-content-center">
             </div>
@@ -9,23 +14,37 @@
             </thead>
             <tbody>
                 <tr>
-                    <th><label for="name" class="form-label">Full Name</label></th>
-                    <td><input type="text" class="form-control" name="name"></td>
+                    <th><label for="name" class="form-label">House Owner Name</label></th>
+                    <td><label for="name" class="form-label">{{houseOwner.username}}</label></td>
                 </tr>
                 <tr>
                     <th><label class="form-label">Amount</label></th>
-                    <td><label >12$</label></td>
+                    <td><label >{{house.price}} TAKA</label></td>
                 </tr>
                 <tr>
-                    <th><label for="bkash/creditCard" class="form-label">Bkash Or Credit Card Number</label></th>
-                    <td><input type="text" class="form-control" name="bkash/creditCard"></td>
+                    <th>{{payMethod}}</th>
+                    <td>{{account}}</td>                  
                 </tr>
+                
+                {%if (payMethod=="Owner Bkash Number")%}                
                 <tr>
-                    <th><button type="submit" class="btn btn-primary">Confirm Purchase</button></th>
-
+                    <th><label for="trx" class="form-label">Make Payment and Enter TRX ID</label></th>
+                    <td><input type="text" class="form-control" name="trx" required></td>
+                </tr>
+                {%else%}
+                <tr>
+                    <th><label for="bankId" class="form-label">Enter Your Bank Account Number</label></th>
+                    <td><input type="text" class="form-control" name="bankId" required></td>
+                </tr>
+                {%endif%}
+                <input type="hidden" name="payMethod" value="{{payMethod}}">
+                <input type="hidden" name="houseOwnerId" value="{{house.uploaded_by}}">
+                <input type="hidden" name="houseId" value="{{house._id}}">
+                <!-- <input type="hidden" name="user" value="{{user}}"> -->
+                <tr>
+                    <td><button type="submit" class="btn btn-primary">Confirm Purchase</button></td>
                 </tr>
             </tbody>
-        
     </form>
 </div>
 {% endblock %}
