@@ -33,7 +33,6 @@ const adminAuthenticate = async (req,res) => { // creating admin profile
 
     if (req.body.username==admin.username && req.body.password==admin.password){
         var token = jwt.sign(payload,secret_key)
-        // await admin_info.findOneAndUpdate({username:admin.username},{token:token})
         var users = await registration_info.find({})
         var houses = await house_info.find({})
 

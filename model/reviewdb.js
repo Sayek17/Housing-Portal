@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
 const review = new mongoose.Schema({
-    reviewGivenTo:{
+    reviewGivenTo:{ // document id
         type:String
     },
-    reviewGivenBy:{
+    reviewGivenBy:{ // document id
         type:String,
     },
     reviewGiverName:{

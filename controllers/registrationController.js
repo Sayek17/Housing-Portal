@@ -75,7 +75,7 @@ const loginAuth =  async (req,res) => {
           approval:user.approval,
           bankAccountNumber:user.bankAccountNumber,
         }
-        var token = jwt.sign(payload,secret_key,{ expiresIn: '1h' })
+        var token = jwt.sign(payload,secret_key,{ expiresIn: '1h' }) //generating encrypted token
         res //sending the client token as cookie
           .cookie('access_token', 'Bearer ' + token, {
           expires: new Date(Date.now() + 1 * 3600000) })

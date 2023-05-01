@@ -4,8 +4,8 @@ const user_review = require('../model/reviewdb')
 const nodemailer = require("nodemailer");
 // multer config
 var multer = require('multer');
-const { get } = require('mongoose');
-var storage = multer.diskStorage({
+// const { get } = require('mongoose');
+var storage = multer.diskStorage({ //uploading images in the public/images
     destination:  (req,file,cb) =>{
         cb(null,'./public/images')
     },
@@ -35,9 +35,7 @@ const home = async function (req, res){
           uploader_rating:users[user].rating,
         }
         await house_info.findOneAndUpdate({_id:houses[house]._id},update)
-      }
-      
-        
+      }  
     }
   }
   data = {
@@ -55,8 +53,10 @@ const contactUsPage = async (req,res)=>{
 }
 const contactUsPost = async (req,res)=>{
   var fullName = req.body.fullName
+  var email = req.user.email
   var contactReason = req.body.contactReason
-  var emailText = `${fullName} has contacted for admin support, their messege is:${contactReason}`
+  var emailText = ` ${fullName} has contacted for admin support from email: ${email},
+   their messege is: ${contactReason}`
   const emailFrom = "md.isa.sayek.huda@g.bracu.ac.bd" //housing portal business email address
   const emailTO = "isasayek@gmail.com"/// admin email address
 
@@ -134,8 +134,6 @@ const houseUpload = async (req,res) => {
 }
 
 const postsPage = async (req,res)=>{
-
-
   var user_id = req.params.user_id
   var user = await registration_info.findOne({user_id:user_id})
   var id = user._id
@@ -234,10 +232,8 @@ const paymentPage = async(req,res)=>{
 
 const payment = async(req,res)=>{
   var houseOwner = await registration_info.findOne({_id:req.body.houseOwnerId})
-  console.log(req.user.user_id)
   var customer = await registration_info.find({user_id:req.user.user_id})
-  console.log(customer)
-  console.log('customer id : '+customer[0]._id)
+
   //Review
   var reviewText = req.body.review
   reviewData = {
@@ -261,14 +257,9 @@ const payment = async(req,res)=>{
   const emailFrom = "md.isa.sayek.huda@g.bracu.ac.bd"
   
 
-  if (Number(req.body.rating)!="none"){
-
+  if (Number(req.body.rating)!="none"){ // calculating seller/renter rating
     var ratingCount = houseOwner.ratingCount+1
-
-    
     var rating = houseOwner.rating
-
-
     rating = ((rating+Number(req.body.rating))/ratingCount)
 
     await registration_info.findOneAndUpdate({email:houseOwner.email},{rating:rating,ratingCount:ratingCount})

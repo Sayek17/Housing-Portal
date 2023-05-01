@@ -8,10 +8,6 @@ const admin = new mongoose.Schema({
         type:Number,
 
     },
-    token:{
-        type:String,
-
-    },
     userCounter:{
         type:Number,
         default:0

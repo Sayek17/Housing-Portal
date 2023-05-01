@@ -20,7 +20,7 @@ router.route('/:user_id/contactUs')
     .post(auth,userController.contactUsPost);
 
 router.route('/:user_id/logout')
-    .get(auth,userController.logout);
+    .get(userController.logout);
     
 router.route('/:user_id/edit')
     .get(auth,userController.profileEdit)

@@ -17,32 +17,32 @@
   </thead>
   <tbody>
       <tr>
-        <th>user name</th>
+        <th>User name:</th>
         <td>{{c_user.username}}</td>
       </tr>
       <tr>
-        <th>email address</th>
+        <th>Email address:</th>
         <td>{{c_user.email}}</td>
       </tr>
       <tr>
-        <th>User Type</th>
+        <th>User Type:</th>
         <td>{{c_user.user_type}}</td>
       </tr>
       <tr>
-        <th>Phone Number</th>
+        <th>Phone Number:</th>
         <td>{{c_user.phone_number}}</td>
       </tr>
       <tr>
-        <th>Address</th>
+        <th>Address:</th>
         <td>{{c_user.address}}</td>
       </tr>
       <tr>
-        <th>Facebook link</th>
+        <th>Facebook link:</th>
         <td>{{c_user.facebook_id}}</td>
       </tr>
       {%if (c_user.user_type!="Customer")%}
         <tr>
-          <th>Your Rating</th>
+          <th>Your Rating:</th>
           {% set x = (b_user.rating | round) %}
           <td>
             {%for i in range(x)%}
