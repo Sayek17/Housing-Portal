@@ -8,4 +8,5 @@ const userController = require('../controllers/userController')
 router.route('/')
         .get(auth,userController.home);
 
+
 module.exports = router;

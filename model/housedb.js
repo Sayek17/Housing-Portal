@@ -17,6 +17,11 @@ const house = new mongoose.Schema({
         type:Number,
         required: true
     },
+    discount:{
+        type:Number,
+        default:0
+    }
+    ,
     picture : {
         type:String,
         required: true
@@ -49,6 +54,9 @@ const house = new mongoose.Schema({
     },
     uploader_phone:{
         type:String
+    },
+    uploader_rating:{
+        type:Number,
     },
     for:{
         type:String,

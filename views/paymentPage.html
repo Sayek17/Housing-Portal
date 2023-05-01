@@ -42,11 +42,51 @@
                 <input type="hidden" name="houseId" value="{{house._id}}">
                 <!-- <input type="hidden" name="user" value="{{user}}"> -->
                 <tr>
-                    <td><button type="submit" class="btn btn-primary">Confirm Purchase</button></td>
+                    <th>Please Rate Owner</th>
+                    <td>
+                        <span  onmouseover="starmark(this)" onclick="starmark(this)" id="1one" style="font-size:40px;cursor:pointer;"  class="fa fa-star checked"></span>
+                        <span onmouseover="starmark(this)" onclick="starmark(this)" id="2one"  style="font-size:40px;cursor:pointer;" class="fa fa-star "></span>
+                        <span onmouseover="starmark(this)" onclick="starmark(this)" id="3one"  style="font-size:40px;cursor:pointer;" class="fa fa-star "></span>
+                        <span onmouseover="starmark(this)" onclick="starmark(this)" id="4one"  style="font-size:40px;cursor:pointer;" class="fa fa-star"></span>
+                        <span onmouseover="starmark(this)" onclick="starmark(this)" id="5one"  style="font-size:40px;cursor:pointer;" class="fa fa-star"></span>
+                        <br/>
+                        <textarea name="review"  style="margin-top:5px;" class="form-control" rows="3" id="comment" placeholder="Enter your review"></textarea>
+                    </td>
+                </tr>
+                <input type="hidden" id="rating" name="rating" value="none">
+                <tr>
+                    <td><button type="submit" onclick="data()" class="btn btn-primary">Confirm Purchase</button></td>
                 </tr>
             </tbody>
     </form>
 </div>
+<script>
+    var count;
+    
+    function starmark(item)
+    {
+      count=item.id[0];
+      sessionStorage.starRating = count;
+      var subid= item.id.substring(1);
+      for(var i=0;i<5;i++)
+      {
+        if(i<count){
+        document.getElementById((i+1)+subid).style.color="orange";
+        }
+        else
+        {
+          document.getElementById((i+1)+subid).style.color="black";
+        }
+    
+    
+      }
+      
+    
+    }
+    function data(){
+        document.getElementById("rating").value = count;
+    }
+    </script>
 {% endblock %}
 
 

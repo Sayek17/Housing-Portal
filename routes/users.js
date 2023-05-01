@@ -11,8 +11,13 @@ var upload = multer({storage:storage});
 
 /* GET users listing. */
 
+
 router.route('/:user_id')
     .get(auth,userController.userPage);
+
+router.route('/:user_id/contactUs')
+    .get(auth,userController.contactUsPage)
+    .post(auth,userController.contactUsPost);
 
 router.route('/:user_id/logout')
     .get(auth,userController.logout);

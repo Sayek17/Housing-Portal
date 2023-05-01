@@ -21,13 +21,19 @@
         </thead>
         <tbody>
             <tr>
-                <th>Name</th>
+                <th>House Name</th>
                 <td>{{house.name}}</td>
             </tr>
             <tr>
                 <th>Location</th>
                 <td>{{house.location}}</td>
             </tr>
+            {%if(house.discount!=0)%}
+            <tr>
+              <th>Special Discount</th>
+              <td style="color: red;">{{house.discount}}%</td>
+            </tr>
+            {%endif%}
             <tr>
                 <th>Price</th>
                 <td>{{house.price}}</td>
@@ -60,6 +66,22 @@
             <tr>
                 <th>Uploaded By</th>
                 <td>{{c_user.username}}</td>
+            </tr>
+            <tr>
+              <th>Uploader Rating</th>
+              {% set x = (house.uploader_rating | round) %}
+              <td>
+                {%for i in range(x)%}
+                <span class="fa fa-star checked"></span>
+                {%endfor%}
+                {%for i in range(5-x)%}
+                <span class="fa fa-star"></span>
+                {%endfor%}
+              </td>
+            </tr>
+            <tr>
+                <th>Visit Owner Profile</th>
+                <td><a href="/users/{{c_user.user_id}}"><button>Owner Profile</button></a></td>
             </tr>
 
               {%if (house.uploader_id==user.user_id)%}

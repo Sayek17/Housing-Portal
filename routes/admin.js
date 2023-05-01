@@ -10,6 +10,10 @@ router.route('/')
 router.route('/:user_id/:what')
     .get(adminAuth,adminControllers.admin_user_approval)
 
+router.route('/:user_id/:post_id/revokePost')
+    .get(adminAuth,adminControllers.admin_post_remove)
+
+
 router.route('/logout')
     .get(adminControllers.adminLogout)
 module.exports = router;

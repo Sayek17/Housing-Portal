@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+</head>
+<body>
+{% extends "navbar.html" %}
+{% block content %}
+<div class="container">
+    <form action="/users/{{user.user_id}}/contactUs" method="post">
+        <table class="table table-dark table-striped-columns">
+            <thead>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Enter Your Full Name</th>
+                    <td><input type="text" name="fullName"></td>
+                </tr>
+                <tr>
+                    <th>How can we help?</th>
+                    <td> <textarea name="contactReason" rows="4" cols="50"></textarea> </td>
+                </tr>
+                <tr>
+                    <td><button type="submit">Submit</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+{%endblock%}
+</body>
+</html>

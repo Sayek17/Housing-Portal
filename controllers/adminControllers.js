@@ -74,9 +74,15 @@ const admin_user_approval = async (req,res) =>{
     }
 
 }
+
+const admin_post_remove = async (req,res)=>{
+    await house_info.findOneAndUpdate({post_id:req.params.post_id,uploader_id:req.params.user_id},{approval:false})
+    res.redirect('/admin')
+}
 module.exports = {
     adminPage,
     adminAuthenticate,
     adminLogout,
     admin_user_approval,
+    admin_post_remove,
 }

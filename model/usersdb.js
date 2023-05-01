@@ -37,6 +37,14 @@ const logIn = new mongoose.Schema({
     },
     facebook_id:{
         type:String,
+    },
+    rating:{
+        type:Number,
+        default:0
+    },
+    ratingCount:{
+        type:Number,
+        default:0
     }
 });
 
