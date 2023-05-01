@@ -79,11 +79,11 @@
         <img src="../../images/{{house.picture}}" class="card-img-top" alt="..." style="height:12rem;">
         <div class="card-body">
           <h5 class="card-title">{{house.name}}</h5>
-          {%if(house.discount!=0)%}
-          <button class="btn btn-primary">Special Discount:{{house.discount}}%</button>
-          {%else%}
-          <p class="card-text">{{house.description}}</p>
-          {%endif%}
+          {%if(house.discount != 0 and house.discount != null)%}
+              <button class="btn btn-primary">Special Discount:{{house.discount}}%</button>
+            {%else%}
+            <p class="card-text">{{house.price}} BDT</p>
+            {%endif%}
           <p>
             User Rating: 
             {% set x = (house.uploader_rating | round) %}
