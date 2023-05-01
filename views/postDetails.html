@@ -88,6 +88,7 @@
               <tr>
                   <th>
                       <a href="/users/{{user_id}}/posts/{{house.post_id}}/edit"><button >Edit</button></a>
+                      <a href="/users/{{user_id}}/posts/{{house.post_id}}/delete"><button>Delete</button></a>
                   </th>
               </tr>
               {%endif%}
@@ -96,7 +97,7 @@
               <tr>
                 <th>Chat With Owner</th>
                 {%if (c_user.facebook_id!="")%}
-                <td><a href="{{c_user.facebook_id}}" ><button >Chat With Owner</button></a></td>
+                <td><a href="{{c_user.facebook_id}}" target=”_blank” ><button >Chat With Owner</button></a></td>
                 {%else%}
                 <td>User did not give his facebook id for chat</td>
                 {%endif%}

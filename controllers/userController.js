@@ -171,6 +171,11 @@ const postEdit = async (req,res) =>{
   res.render('postEdit',data)
 }
 
+const postDelete = async (req,res)=>{
+  await house_info.findOneAndDelete({uploader_id:req.params.user_id,post_id:req.params.post_id})
+  res.redirect(`/users/${req.user.user_id}/posts`)
+}
+
 const postUpdate = async (req,res) =>{
   var filter = {post_id:req.params.post_id}
   var update = {
@@ -217,7 +222,7 @@ const updateProfile = async (req,res)=>{
 }
 
 const paymentPage = async(req,res)=>{
-  const house = await house_info.findOne({post_id:req.params.post_id})
+  const house = await house_info.findOne({post_id:req.params.post_id,uploader_id:req.params.user_id})
   const houseOwner = await registration_info.findOne({_id:house.uploaded_by})
   data = {
     user:req.user,
@@ -243,7 +248,6 @@ const payment = async(req,res)=>{
     reviewText:reviewText,
   }
   await user_review.insertMany([reviewData])
-
   var payMethod = req.body.payMethod
   var house = await house_info.findOne({_id:req.body.houseId})
   var emailText = `username:${req.user.username} user ID:${req.user.user_id}, Bank account number is: ${req.body.bankId},
@@ -357,6 +361,7 @@ module.exports = {
   postsPage,
   postDetails,
   postEdit,
+  postDelete,
   postUpdate,
   profileEdit,
   updateProfile,

@@ -48,6 +48,9 @@ router.route('/:user_id/posts/:post_id/edit')
     .get(auth,userController.postEdit)
     .post(auth,userController.postUpdate);
 
+router.route('/:user_id/posts/:post_id/delete')
+    .get(auth,userController.postDelete);
+
 router.route('/:user_id/posts/:post_id/dealConfirm')
     .get(auth,userController.dealConfirm);
 
