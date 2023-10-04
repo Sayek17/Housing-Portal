@@ -1,2 +1,2 @@
 # Housing-Portal
-testing
+CSE470 Software Engineering Project 
